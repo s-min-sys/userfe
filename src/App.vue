@@ -113,4 +113,11 @@ nav a.router-link-exact-active {
   padding-left: 60px;
   padding-right: 60px;
 }
+
+.layout-children-align-right {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%
+}
+
 </style>

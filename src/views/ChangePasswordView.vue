@@ -3,7 +3,7 @@
     <el-card class="center-content">
       <template #header>
         <div class="card-header">
-          <span>{{ $t('label.register')}}</span>
+          <span>{{ $t('label.changePassword')}}</span>
         </div>
       </template>
       <div style="margin: 20px" />
@@ -13,8 +13,8 @@
           :model="formData"
           :rules="rules"
       >
-        <el-form-item :label="$t('label.userName')" prop="name">
-          <el-input v-model="formData.name" v-focus @keydown.enter="$enter2TabKey" />
+        <el-form-item :label="$t('label.oldPassword')" prop="oldPassword">
+          <el-input v-model="formData.oldPassword" v-focus @keydown.enter="$enter2TabKey" />
         </el-form-item>
         <el-form-item :label="$t('label.password')" prop="password">
           <el-input v-model="formData.password" @keydown.enter="$enter2TabKey" />
@@ -25,8 +25,6 @@
         <el-form-item>
           <div class="layout-children-align-right">
             <el-button type="primary" @click="doLogin(formRef)">{{ $t('label.submit')}}</el-button>
-            <el-button @click="resetForm(formRef)">{{ $t('label.reset')}}</el-button>
-            <el-button type="success" link style="font-style:italic;" @click="switch2LoginPage">{{ $t('label.hasAccount')}}</el-button>
           </div>
         </el-form-item>
       </el-form>
@@ -37,13 +35,12 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import {ElMessage, ElNotification, FormInstance, FormRules} from "element-plus";
-import {useRouter} from "vue-router";
 import {useI18n} from "vue-i18n";
 
 const formRef = ref<FormInstance>()
 
 const formData = reactive({
-  name: '',
+  oldPassword: '',
   password: '',
   reenterPassword: '',
 })
@@ -72,8 +69,8 @@ const validatePass2 = (rule: any, value: any, callback: any) => {
 }
 
 const rules = reactive<FormRules>({
-  name: [
-    {required: true, message:  t('tip.noUserName'), trigger: 'blur'},
+  oldPassword: [
+    {required: true, message:  t('tip.noOldPassword'), trigger: 'blur'},
   ],
   password: [{ required: true, validator: validatePass, trigger: 'blur' }],
   reenterPassword: [{ required: true, validator: validatePass2, trigger: 'blur' }],
@@ -97,17 +94,5 @@ const doLogin = (formEl: FormInstance | undefined) => {
     }
   })
 }
-
-const resetForm = (formEl: FormInstance | undefined) => {
-  if (!formEl) return
-  formEl.resetFields()
-}
-
-const router = useRouter()
-
-const switch2LoginPage = () => {
-  router.push('/login')
-}
-
 
 </script>

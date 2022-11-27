@@ -19,8 +19,10 @@
           <el-input v-model="formData.password" @keydown.enter="doLogin(formRef)" />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="doLogin(formRef)">{{ $t('label.submit')}}</el-button>
-          <el-button type="success" link style="font-style:italic;" @click="switch2RegisterPage">{{ $t('label.noAccount')}}</el-button>
+          <div class="layout-children-align-right">
+            <el-button type="primary" @click="doLogin(formRef)">{{ $t('label.submit')}}</el-button>
+            <el-button type="success" link style="font-style:italic;" @click="switch2RegisterPage">{{ $t('label.noAccount')}}</el-button>
+          </div>
         </el-form-item>
       </el-form>
     </el-card>
@@ -44,10 +46,10 @@ const { t } = useI18n()
 
 const rules = reactive<FormRules>({
   name: [
-    {required: true, message: t('tip.noEmpty'), trigger: 'blur'},
+    {required: true, message: t('tip.noUserName'), trigger: 'blur'},
   ],
   password: [
-    {required: true, message: t('tip.noEmpty'), trigger: 'blur'},
+    {required: true, message: t('tip.noPassword'), trigger: 'blur'},
   ],
 })
 

@@ -5,7 +5,9 @@ export default {
   label: {
     register: '注册',
     login: '登录',
+    changePassword: '修改密码',
     userName: '用户名',
+    oldPassword: '旧密码',
     password: '密码',
     reenterPassword: '确认密码',
     submit: '提交',
@@ -14,7 +16,10 @@ export default {
     hasAccount: '我已经有了账户',
   },
   tip: {
-    noEmpty: '此项不能为空',
+    noUserName: '请输入用户名',
+    noOldPassword: '请输入旧密码',
+    noPassword: '请输入密码',
+    noReenterPassword: '请再次输入密码',
     passwordNotSame: '两次输入密码不一致',
   }
 }

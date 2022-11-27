@@ -5,7 +5,9 @@ export default {
   label: {
     register: 'register',
     login: 'login',
+    changePassword: 'change password',
     userName: 'userName',
+    oldPassword: 'old password',
     password: 'password',
     reenterPassword: 'check password',
     submit: 'submit',
@@ -14,7 +16,10 @@ export default {
     hasAccount: 'I have account',
   },
   tip: {
-    noEmpty: 'please fill it',
-    passwordNotSame: 'Two inputs don\'t match!',
+    noUserName: 'please input the user name',
+    noOldPassword: 'please input the old password',
+    noPassword: 'please input the password',
+    noReenterPassword: 'Please input the password again',
+    passwordNotSame: 'two inputs don\'t match!',
   }
 }
