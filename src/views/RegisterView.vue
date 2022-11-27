@@ -3,7 +3,7 @@
     <el-card class="center-content">
       <template #header>
         <div class="card-header">
-          <span>注册</span>
+          <span>{{ $t('label.register')}}</span>
         </div>
       </template>
       <div style="margin: 20px" />
@@ -13,20 +13,21 @@
           :model="formData"
           :rules="rules"
       >
-        <el-form-item label="UserName" prop="name">
+        <el-form-item :label="$t('label.userName')" prop="name">
           <el-input v-model="formData.name" v-focus @keydown.enter="$enter2TabKey" />
         </el-form-item>
-        <el-form-item label="Password" prop="password">
+        <el-form-item :label="$t('label.password')" prop="password">
           <el-input v-model="formData.password" @keydown.enter="$enter2TabKey" />
         </el-form-item>
-        <el-form-item label="ReenterPassword" prop="reenterPassword">
+        <el-form-item :label="$t('label.reenterPassword')" prop="reenterPassword">
           <el-input v-model="formData.reenterPassword" @keydown.enter="doLogin(formRef)" />
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="doLogin(formRef)"
-          >提交</el-button
+          >{{ $t('label.submit')}}</el-button
           >
-          <el-button @click="resetForm(formRef)">重置</el-button>
+          <el-button @click="resetForm(formRef)">{{ $t('label.reset')}}</el-button>
+          <el-button type="success" link style="font-style:italic;" @click="switch2LoginPage">{{ $t('label.hasAccount')}}</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -36,6 +37,7 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import {ElMessage, ElNotification, FormInstance, FormRules} from "element-plus";
+import {useRouter} from "vue-router";
 
 const formRef = ref<FormInstance>()
 
@@ -96,6 +98,12 @@ const doLogin = (formEl: FormInstance | undefined) => {
 const resetForm = (formEl: FormInstance | undefined) => {
   if (!formEl) return
   formEl.resetFields()
+}
+
+const router = useRouter()
+
+const switch2LoginPage = () => {
+  router.push('/login')
 }
 
 

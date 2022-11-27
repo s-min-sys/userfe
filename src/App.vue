@@ -41,7 +41,7 @@ nav a.router-link-exact-active {
   right: 0;
   width: 30%;
   margin: 0 auto;
-  padding: 20px 60px 20px 60px;
+  padding: 10px 20px 10px 20px;
 }
 
 .center-content:hover {

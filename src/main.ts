@@ -4,15 +4,19 @@ import router from './router'
 import store from './store'
 import 'element-plus/es/components/message/style/css'
 import 'element-plus/es/components/notification/style/css'
+import i18n from '@/i18n/index.js'
 
 const app = createApp(App);
-app.use(store).use(router).mount('#app')
+app.use(store).use(router)
+app.use(i18n)
 
 app.directive('focus', {
     mounted(el) {
         el.querySelector('input').focus()
     },
 })
+
+app.mount('#app')
 
 const enter2TabKey = () => {
     const currInput = document.activeElement;
