@@ -9,7 +9,7 @@
       <div style="margin: 20px" />
       <el-form
           ref="formRef"
-          label-width="100px"
+          label-width="auto"
           :model="formData"
           :rules="rules"
       >

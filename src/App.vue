@@ -1,10 +1,55 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
+  <el-menu
+      :default-active="curRouter()"
+      class="menu"
+      mode="horizontal"
+      :ellipsis="false"
+      @select="handleSelect"
+  >
+    <el-menu-item index="/">LOGO</el-menu-item>
+    <div class="flex-grow" />
+    <el-sub-menu index="2">
+      <template #title>账户</template>
+      <el-menu-item index="/login">登录</el-menu-item>
+      <el-menu-item index="/register">注册</el-menu-item>
+    </el-sub-menu>
+    <div style="display: flex; align-items: center">
+      <el-button link @click="switchLang">Lang</el-button>
+    </div>
+  </el-menu>
   <router-view/>
 </template>
+
+<script lang="ts" setup>
+import {useRoute, useRouter} from "vue-router";
+import {getCurrentInstance} from "vue";
+
+const instance = getCurrentInstance();
+const ctx = instance?.appContext.config.globalProperties;
+
+const route = useRoute();
+
+const curRouter = () => {
+  return route.path
+}
+
+const router = useRouter();
+
+const handleSelect = (key: string) => {
+  router.push(key)
+}
+
+const switchLang = () => {
+  if (ctx !== undefined) {
+    if (ctx.$i18n.locale === 'zh') {
+      ctx.$i18n.locale = 'en'
+    } else {
+      ctx.$i18n.locale = 'zh'
+    }
+    localStorage.setItem('locale', ctx.$i18n.locale)
+  }
+}
+</script>
 
 <style>
 #app {
@@ -60,4 +105,12 @@ nav a.router-link-exact-active {
   }
 }
 
+.flex-grow {
+  flex-grow: 1;
+}
+
+.menu {
+  padding-left: 60px;
+  padding-right: 60px;
+}
 </style>
