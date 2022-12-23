@@ -14,5 +14,17 @@ module.exports = defineConfig({
         resolvers: [ElementPlusResolver()],
       }),
     ],
+  },
+  devServer: {
+    proxy: {
+      "/grpcservicer": {
+        target: "http://127.0.0.1:13333",
+        changeOrigin: true,
+        pathRewrite: {
+          "^/grpcservicer": ""
+        },
+        "secure": false
+      }
+    }
   }
 })

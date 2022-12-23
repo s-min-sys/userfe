@@ -5,6 +5,7 @@ import store from './store'
 import 'element-plus/es/components/message/style/css'
 import 'element-plus/es/components/notification/style/css'
 import i18n from '@/i18n/index.js'
+import grpc_api from "@/api/grpc_api.js";
 
 const app = createApp(App);
 app.use(store).use(router)
@@ -35,3 +36,4 @@ const enter2TabKey = () => {
 }
 
 app.config.globalProperties.$enter2TabKey = enter2TabKey
+app.use(grpc_api)
