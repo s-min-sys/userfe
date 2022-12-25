@@ -37,3 +37,9 @@ const enter2TabKey = () => {
 
 app.config.globalProperties.$enter2TabKey = enter2TabKey
 app.use(grpc_api)
+
+import * as ElementPlusIconsVue from '@element-plus/icons-vue'
+
+for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+    app.component(key, component)
+}
