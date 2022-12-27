@@ -2,7 +2,7 @@ import {UserServicerClient} from "../../proto/user/user_pb_service";
 import {
   CheckTokenRequest,
   LoginBeginRequest,
-  LoginCheckRequest, LoginEndRequest,
+  LoginCheckRequest, LoginEndRequest, LogoutRequest,
   RegisterBeginRequest,
   RegisterCheckRequest, RegisterEndRequest
 } from "../../proto/user/user_pb";
@@ -10,6 +10,8 @@ import {AuthenticatorUserPassClient} from "../../proto/user/authenticator_userpa
 import {LoginRequest, RegisterRequest} from "../../proto/user/authenticator_userpass_pb";
 import {AuthenticatorGoogle2faClient} from "../../proto/user/authenticator_google2fa_pb_service";
 import {DoSetupRequest, GetSetupInfoRequest, VerifyRequest} from "../../proto/user/authenticator_google2fa_pb";
+
+import store from '@/store'
 
 export default {
   install (app) {
@@ -39,7 +41,7 @@ export default {
       let exception = null;
 
       if (err != null) {
-        exception = new Error(JSON.stringify(err));
+        exception = err;
       } else if (resp == null) {
         exception = new Error("no resp");
       }
@@ -274,6 +276,32 @@ export default {
           req.setUserName(userName);
           req.setPassword(password);
           grpcAuthenticatorUserPassClient.login(req,{}, (err, resp) => {
+            let exception = checkGrpcException(err, resp);
+            if (exception !== null) {
+              reject(exception);
+
+              return;
+            }
+
+            resolve(resp);
+          })
+        })
+      },
+      logout() {
+        const token = store.getters.token;
+
+        store.commit('token', '');
+        store.commit('userInfo', {});
+
+        return new Promise((resolve, reject) => {
+          if (typeof token !== 'string' || !token) {
+            return
+          }
+
+          const req = new LogoutRequest();
+          grpcUserClient.logout(req,{
+            'user_token': token,
+          }, (err, resp) => {
             let exception = checkGrpcException(err, resp);
             if (exception !== null) {
               reject(exception);

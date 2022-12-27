@@ -43,6 +43,17 @@ const curRouter = () => {
 const router = useRouter();
 
 const handleSelect = (key: string) => {
+  if (key == '/logout') {
+    ctx?.$grpc.logout().then(()=>{
+      location.reload()
+    }).catch(()=>{
+      location.reload()
+    })
+
+
+    return
+  }
+
   router.push(key)
 }
 
