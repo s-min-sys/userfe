@@ -10,7 +10,11 @@
     <div class="flex-grow" />
     <el-sub-menu index="2">
       <template #title>账户</template>
-      <el-menu-item index="/login">登录</el-menu-item>
+      <el-menu-item v-if="store.getters.token === ''" index="/login">登录</el-menu-item>
+      <div v-else>
+        <el-menu-item  index="/"> 用户 {{ store.getters.userInfo &&  store.getters.userInfo.userName }}</el-menu-item>
+        <el-menu-item  index="/logout">登出</el-menu-item>
+      </div>
       <el-menu-item index="/register">注册</el-menu-item>
     </el-sub-menu>
     <div style="display: flex; align-items: center">
@@ -23,9 +27,12 @@
 <script lang="ts" setup>
 import {useRoute, useRouter} from "vue-router";
 import {getCurrentInstance} from "vue";
+import {useStore} from "vuex";
 
 const instance = getCurrentInstance();
 const ctx = instance?.appContext.config.globalProperties;
+
+const store = useStore();
 
 const route = useRoute();
 

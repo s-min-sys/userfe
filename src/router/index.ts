@@ -20,7 +20,23 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/changepassword',
     name: 'changepassword',
+    meta: {
+      requireAuth: true
+    },
     component: () => import(/* webpackChunkName: "about" */ '../views/ChangePasswordView.vue')
+  },
+  {
+    path: '/biz',
+    name: 'biz',
+    component: () => import(/* webpackChunkName: "about" */ '../views/BizView.vue')
+  },
+  {
+    path: '/profile',
+    name: 'profile',
+    meta: {
+      requireAuth: true
+    },
+    component: () => import(/* webpackChunkName: "about" */ '../views/ProfileView.vue')
   },
   {
     path: '/about',

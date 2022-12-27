@@ -11,6 +11,48 @@ const app = createApp(App);
 app.use(store).use(router)
 app.use(i18n)
 
+app.use(grpc_api)
+
+const checkToken = () => {
+    return new Promise((resolve, reject) => {
+        const token = store.getters.token;
+        if (typeof token !== 'string' || !token) {
+            reject()
+
+            return
+        }
+
+        app.config.globalProperties.$grpc.checkToken(token).then((resp: any) => {
+            if (resp.getStatus().getCode() === 1) {
+                store.commit('userInfo', resp.getTokenInfo().toObject())
+                resolve(resp)
+            } else {
+                reject()
+            }
+        }).catch(() => {
+            reject()
+        })
+    })
+
+}
+
+router.beforeEach((to, from, next) => {
+    if (to.meta.requireAuth) {
+        checkToken().then(()=>{
+            next()
+        }).catch(() => {
+            next({
+                path: '/biz',
+                query: { redirected: to.fullPath }
+            })
+        })
+
+        return
+    }
+
+    next()
+})
+
 app.directive('focus', {
     mounted(el) {
         el.querySelector('input').focus()
@@ -36,7 +78,7 @@ const enter2TabKey = () => {
 }
 
 app.config.globalProperties.$enter2TabKey = enter2TabKey
-app.use(grpc_api)
+
 
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 

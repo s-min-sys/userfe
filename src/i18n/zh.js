@@ -14,6 +14,7 @@ export default {
     reset: '重置',
     noAccount: '我还没有账户',
     hasAccount: '我已经有了账户',
+    qrcode: '谷歌验证码',
   },
   tip: {
     noUserName: '请输入用户名',
@@ -21,5 +22,6 @@ export default {
     noPassword: '请输入密码',
     noReenterPassword: '请再次输入密码',
     passwordNotSame: '两次输入密码不一致',
+    noQrCode: '请输入谷歌验证码',
   }
 }

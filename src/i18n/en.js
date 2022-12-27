@@ -14,6 +14,7 @@ export default {
     reset: 'reset',
     noAccount: 'I have not account now',
     hasAccount: 'I have account',
+    qrcode: 'google2fa',
   },
   tip: {
     noUserName: 'please input the user name',
@@ -21,5 +22,6 @@ export default {
     noPassword: 'please input the password',
     noReenterPassword: 'Please input the password again',
     passwordNotSame: 'two inputs don\'t match!',
+    noQrCode: 'please input google 2fa code',
   }
 }
