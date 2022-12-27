@@ -376,6 +376,18 @@ const fnLoginEnd = () => {
   })
 }
 
-fnLoginStart()
+let op = 'register';
+
+if (route.query.op) {
+  if (route.query.op === 'login') {
+    op = 'login';
+  }
+}
+
+if (op == 'login') {
+  fnLoginStart()
+} else {
+  fnRegisterStart()
+}
 
 </script>

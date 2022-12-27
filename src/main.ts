@@ -43,7 +43,7 @@ router.beforeEach((to, from, next) => {
         }).catch(() => {
             next({
                 path: '/biz',
-                query: { redirected: to.fullPath }
+                query: { redirected: to.fullPath, op: 'login' },
             })
         })
 
