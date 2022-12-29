@@ -11,8 +11,6 @@ import {LoginRequest, RegisterRequest} from "../../proto/user/authenticator_user
 import {AuthenticatorGoogle2faClient} from "../../proto/user/authenticator_google2fa_pb_service";
 import {DoSetupRequest, GetSetupInfoRequest, VerifyRequest} from "../../proto/user/authenticator_google2fa_pb";
 
-import store from '@/store'
-
 export default {
   install (app) {
     const grpcUserClient = new UserServicerClient(process.env.VUE_APP_GRPC_SERVICER, {
@@ -89,6 +87,19 @@ export default {
     app.config.globalProperties.$grpc = {
       test() {
         console.log("*********************")
+      },
+      updateQueryStringParameter(uri, key, value) {
+        if (!value) {
+          return uri;
+        }
+
+        const re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
+        const separator = uri.indexOf("?") !== -1 ? "&" : "?";
+        if (uri.match(re)) {
+          return uri.replace(re, "$1" + key + "=" + value + "$2");
+        } else {
+          return uri + separator + key + "=" + value;
+        }
       },
       register() {
         return new Promise((resolve, reject) => {
@@ -187,12 +198,11 @@ export default {
           })
         })
       },
-      checkToken(token) {
+      checkToken(ssoJumpURL) {
         return new Promise((resolve, reject) => {
           const req = new CheckTokenRequest();
-          grpcUserClient.checkToken(req,{
-            'user_token': token,
-          }, (err, resp) => {
+          req.setSsoJumpUrl(ssoJumpURL);
+          grpcUserClient.checkToken(req,{}, (err, resp) => {
             let exception = checkGrpcException(err, resp);
             if (exception !== null) {
               reject(exception);
@@ -288,20 +298,9 @@ export default {
         })
       },
       logout() {
-        const token = store.getters.token;
-
-        store.commit('token', '');
-        store.commit('userInfo', {});
-
         return new Promise((resolve, reject) => {
-          if (typeof token !== 'string' || !token) {
-            return
-          }
-
           const req = new LogoutRequest();
-          grpcUserClient.logout(req,{
-            'user_token': token,
-          }, (err, resp) => {
+          grpcUserClient.logout(req,{}, (err, resp) => {
             let exception = checkGrpcException(err, resp);
             if (exception !== null) {
               reject(exception);

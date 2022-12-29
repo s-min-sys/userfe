@@ -215,8 +215,6 @@ const fnRegisterEnd = () => {
       return
     }
 
-    store.commit('token', resp.getToken())
-
     fnCheckToken()
   })
 }
@@ -309,21 +307,32 @@ const route = useRoute();
 const router = useRouter();
 
 const fnCheckToken = () => {
-  ctx?.$grpc.checkToken(store.getters.token).then((resp: any) => {
-    if (resp.getStatus().getCode() !== 1) {
-      ElMessage({
-        message: resp.getStatus().getCode() + ":" + resp.getStatus().getMessage(),
-        type: 'error',
-      })
+  // eslint-disable-next-line no-prototype-builtins
+  const ssoFlag = route.query.hasOwnProperty('sso') && route.query['sso'] === "1";
+  // eslint-disable-next-line no-prototype-builtins
+  const redirectedFlag = route.query.hasOwnProperty('redirected') && route.query['redirected'] !== ''
 
-      return
-    }
+  let ssoJumpURL = '';
+  if (ssoFlag && redirectedFlag) {
+    ssoJumpURL = route.query['redirected'] as string;
+  }
 
+  store.dispatch('GetAndCheckToken', ssoJumpURL).then((resp: any) => {
     store.commit('userInfo', resp.getTokenInfo().toObject())
-
-    if (route.query.redirected && route.query.redirected !== '') {
-      router.push(route.query.redirected as string)
+    if (redirectedFlag) {
+      if (ssoFlag) {
+        window.location.replace(
+            ctx?.$grpc.updateQueryStringParameter(route.query['redirected'], "sso_token", resp.getSsoToken())
+        );
+      } else {
+        router.push(route.query.redirected as string)
+      }
     }
+  }).catch(() => {
+    ElMessage({
+      message: '失败了:(',
+      type: 'error',
+    })
   })
 }
 
@@ -369,8 +378,6 @@ const fnLoginEnd = () => {
 
       return
     }
-
-    store.commit('token', resp.getToken())
 
     fnCheckToken()
   })

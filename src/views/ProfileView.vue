@@ -29,17 +29,6 @@
       </template>
       {{ store.getters.userInfo.userName }}
     </el-descriptions-item>
-    <el-descriptions-item>
-      <template #label>
-        <div class="cell-item">
-          <el-icon :style="iconStyle">
-            <Van />
-          </el-icon>
-          token
-        </div>
-      </template>
-      {{ fnMaxCharLines(store.getters.token, 100) }}
-    </el-descriptions-item>
   </el-descriptions>
 </template>
 
@@ -55,21 +44,6 @@ const iconStyle = computed(() => {
     marginRight: '6px',
   }
 })
-
-const fnMaxCharLines = (str : string, n: number) => {
-  const len = str.length;
-  let strTemp = '';
-
-  if(len > n){
-    strTemp = str.substring(0,n);
-    str = str.substring(n,len);
-    return strTemp+'\n'+fnMaxCharLines(str,n);
-
-  }else{
-    return str;
-  }
-}
-
 
 </script>
 

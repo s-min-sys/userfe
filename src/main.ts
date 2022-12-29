@@ -1,4 +1,4 @@
-import { createApp } from 'vue'
+import {createApp} from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
@@ -13,32 +13,69 @@ app.use(i18n)
 
 app.use(grpc_api)
 
-const checkToken = () => {
-    return new Promise((resolve, reject) => {
-        const token = store.getters.token;
-        if (typeof token !== 'string' || !token) {
-            reject()
-
-            return
+router.beforeEach((to, from, next) => {
+    if (to.path === "/sso") {
+        // eslint-disable-next-line no-prototype-builtins
+        if (to.query.hasOwnProperty("url")) {
+            // eslint-disable-next-line no-prototype-builtins
+            if (to.query.hasOwnProperty("logout")) {
+                store
+                    .dispatch("Logout")
+                    .then(() => {
+                        window.location.replace(
+                            app.config.globalProperties.$grpc.updateQueryStringParameter(
+                                to.query["url"],
+                                "logout_result",
+                                "0"
+                            )
+                        );
+                    })
+                    .catch(() => {
+                        window.location.replace(
+                            app.config.globalProperties.$grpc.updateQueryStringParameter(
+                                to.query["url"],
+                                "logout_result",
+                                "-1"
+                            )
+                        );
+                    });
+            } else {
+                store
+                    .dispatch("SSOLogin", to.query["url"])
+                    .then(resp => {
+                        if (resp.getStatus().getCode() === 1 && resp.getSsoToken() !== "") {
+                            window.location.replace(
+                                app.config.globalProperties.$grpc.updateQueryStringParameter(
+                                    to.query["url"],
+                                    "sso_token",
+                                    resp.getSsoToken()
+                                )
+                            );
+                        } else {
+                            next({
+                                path: '/biz',
+                                query: { redirected: to.query["url"], op: 'login', sso: "1" },
+                            })
+                        }
+                    })
+                    .catch(err => {
+                        console.log("^^^^^^^^^^^^^^", err)
+                        window.location.replace(
+                            app.config.globalProperties.$grpc.updateQueryStringParameter(
+                                to.query["url"],
+                                "token_err",
+                                err
+                            )
+                        );
+                    });
+            }
         }
 
-        app.config.globalProperties.$grpc.checkToken(token).then((resp: any) => {
-            if (resp.getStatus().getCode() === 1) {
-                store.commit('userInfo', resp.getTokenInfo().toObject())
-                resolve(resp)
-            } else {
-                reject()
-            }
-        }).catch(() => {
-            reject()
-        })
-    })
+        return
+    }
 
-}
-
-router.beforeEach((to, from, next) => {
     if (to.meta.requireAuth) {
-        checkToken().then(()=>{
+        store.dispatch('GetAndCheckToken').then(()=>{
             next()
         }).catch(() => {
             next({
@@ -48,6 +85,12 @@ router.beforeEach((to, from, next) => {
         })
 
         return
+    }
+
+    if (store.getters.hasLogin) {
+        store.dispatch('GetAndCheckToken').then(() => {
+            console.log('token valid')
+        })
     }
 
     next()
@@ -85,3 +128,5 @@ import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
     app.component(key, component)
 }
+
+store.state.$grpc = app.config.globalProperties.$grpc;

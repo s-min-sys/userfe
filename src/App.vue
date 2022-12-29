@@ -10,7 +10,7 @@
     <div class="flex-grow" />
     <el-sub-menu index="2">
       <template #title>账户</template>
-      <el-menu-item v-if="store.getters.token === ''" index="/biz?op=login">登录</el-menu-item>
+      <el-menu-item v-if="!store.getters.hasLogin" index="/biz?op=login">登录</el-menu-item>
       <div v-else>
         <el-menu-item  index="/"> 用户 {{ store.getters.userInfo &&  store.getters.userInfo.userName }}</el-menu-item>
         <el-menu-item  index="/logout">登出</el-menu-item>
@@ -44,7 +44,7 @@ const router = useRouter();
 
 const handleSelect = (key: string) => {
   if (key == '/logout') {
-    ctx?.$grpc.logout().then(()=>{
+    store.dispatch('Logout').then(()=>{
       location.reload()
     }).catch(()=>{
       location.reload()
