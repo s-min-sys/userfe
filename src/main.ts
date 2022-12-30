@@ -43,7 +43,7 @@ router.beforeEach((to, from, next) => {
                 store
                     .dispatch("SSOLogin", to.query["url"])
                     .then(resp => {
-                        if (resp.getStatus().getCode() === 1 && resp.getSsoToken() !== "") {
+                        if (resp !== null && (resp.getStatus().getCode() === 1 && resp.getSsoToken() !== "")) {
                             window.location.replace(
                                 app.config.globalProperties.$grpc.updateQueryStringParameter(
                                     to.query["url"],
@@ -59,7 +59,6 @@ router.beforeEach((to, from, next) => {
                         }
                     })
                     .catch(err => {
-                        console.log("^^^^^^^^^^^^^^", err)
                         window.location.replace(
                             app.config.globalProperties.$grpc.updateQueryStringParameter(
                                 to.query["url"],

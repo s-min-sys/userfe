@@ -47,6 +47,12 @@ export default createStore({
   actions: {
     SSOLogin({state}, ssoJumpURL) {
       return new Promise((resolve, reject) => {
+        if (!state.hasLogin) {
+          resolve(null)
+
+          return
+        }
+
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         state.$grpc?.checkToken(ssoJumpURL).then((resp: any) => {
