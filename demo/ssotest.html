@@ -14,7 +14,27 @@
       body: JSON.stringify({ "sso_token": value })
     })
       .then(response => response.json())
-      .then(response => console.log(JSON.stringify(response)))
+      .then(response => {
+        console.log(JSON.stringify(response))
+        const token = response.token;
+        console.log('token is:', token)
+        profile()
+      })
+  }
+
+  const profile = () => {
+    fetch('http://127.0.0.1:14444/user/profile', {
+      method: 'GET',
+      credentials: 'include',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+    })
+      .then(response => response.json())
+      .then(response => {
+        console.log(JSON.stringify(response))
+      })
   }
 </script>
-<a href="http://localhost:8081/sso?url=http://localhost:8112/D%3A/ssotest.html">GoGo</a>
+<a href="http://localhost:8080/sso?url=http://localhost:8112/D%3A/ssotest.html">GoGo</a>
