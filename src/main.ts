@@ -14,65 +14,6 @@ app.use(i18n)
 app.use(grpc_api)
 
 router.beforeEach((to, from, next) => {
-    if (to.path === "/sso") {
-        // eslint-disable-next-line no-prototype-builtins
-        if (to.query.hasOwnProperty("url")) {
-            // eslint-disable-next-line no-prototype-builtins
-            if (to.query.hasOwnProperty("logout")) {
-                store
-                    .dispatch("Logout")
-                    .then(() => {
-                        window.location.replace(
-                            app.config.globalProperties.$grpc.updateQueryStringParameter(
-                                to.query["url"],
-                                "logout_result",
-                                "0"
-                            )
-                        );
-                    })
-                    .catch(() => {
-                        window.location.replace(
-                            app.config.globalProperties.$grpc.updateQueryStringParameter(
-                                to.query["url"],
-                                "logout_result",
-                                "-1"
-                            )
-                        );
-                    });
-            } else {
-                store
-                    .dispatch("SSOLogin", to.query["url"])
-                    .then(resp => {
-                        if (resp !== null && (resp.getStatus().getCode() === 1 && resp.getSsoToken() !== "")) {
-                            window.location.replace(
-                                app.config.globalProperties.$grpc.updateQueryStringParameter(
-                                    to.query["url"],
-                                    "sso_token",
-                                    resp.getSsoToken()
-                                )
-                            );
-                        } else {
-                            next({
-                                path: '/biz',
-                                query: { redirected: to.query["url"], op: 'login', sso: "1" },
-                            })
-                        }
-                    })
-                    .catch(err => {
-                        window.location.replace(
-                            app.config.globalProperties.$grpc.updateQueryStringParameter(
-                                to.query["url"],
-                                "token_err",
-                                err
-                            )
-                        );
-                    });
-            }
-        }
-
-        return
-    }
-
     if (to.meta.requireAuth) {
         store.dispatch('GetAndCheckToken').then(()=>{
             next()

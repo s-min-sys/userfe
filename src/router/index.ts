@@ -42,9 +42,9 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import(/* webpackChunkName: "about" */ '../views/ProfileView.vue')
   },
   {
-    path: "/sso",
-    name: "sso",
-    component: () => import(/* webpackChunkName: "about" */ '../views/SSOView.vue')
+    path: '/auth',
+    name: 'auth',
+    component: () => import(/* webpackChunkName: "about" */ '../views/AuthView.vue')
   },
   {
     path: '/about',

@@ -24,7 +24,12 @@ module.exports = defineConfig({
           "^/grpcservicer": ""
         },
         "secure": false
-      }
+      },
+      "/oauth": {
+        target: "http://127.0.0.1:13334",
+        changeOrigin: true,
+        "secure": false
+      },
     }
   }
 })

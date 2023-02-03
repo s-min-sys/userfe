@@ -45,28 +45,11 @@ export default createStore({
     },
   },
   actions: {
-    SSOLogin({state}, ssoJumpURL) {
-      return new Promise((resolve, reject) => {
-        if (!state.hasLogin) {
-          resolve(null)
-
-          return
-        }
-
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        state.$grpc?.checkToken(ssoJumpURL).then((resp: any) => {
-          resolve(resp)
-        }).catch(() => {
-          reject()
-        })
-      })
-    },
-    GetAndCheckToken({commit, state}, ssoJumpURL) {
+    GetAndCheckToken({commit, state}) {
         return new Promise((resolve, reject) => {
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
-          state.$grpc?.checkToken(ssoJumpURL).then((resp: any) => {
+          state.$grpc?.checkToken().then((resp: any) => {
             if (resp.getStatus().getCode() === 1) {
               commit('setLogin', '1')
               commit('userInfo', resp.getTokenInfo().toObject())

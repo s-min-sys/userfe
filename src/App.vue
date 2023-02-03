@@ -12,7 +12,7 @@
       <template #title>账户</template>
       <el-menu-item v-if="!store.getters.hasLogin" index="/biz?op=login">登录</el-menu-item>
       <div v-else>
-        <el-menu-item  index="/"> 用户 {{ store.getters.userInfo &&  store.getters.userInfo.userName }}</el-menu-item>
+        <el-menu-item  index="/profile"> 用户 {{ store.getters.userInfo &&  store.getters.userInfo.userName }}</el-menu-item>
         <el-menu-item  index="/logout">登出</el-menu-item>
       </div>
       <el-menu-item index="/biz?op=register">注册</el-menu-item>

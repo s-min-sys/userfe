@@ -5,7 +5,7 @@
       border
   >
     <template #extra>
-      <el-button type="primary">Logout</el-button>
+      <el-button type="primary" @click="fnLogout">Logout</el-button>
     </template>
     <el-descriptions-item>
       <template #label>
@@ -44,6 +44,14 @@ const iconStyle = computed(() => {
     marginRight: '6px',
   }
 })
+
+const fnLogout = () => {
+  store.dispatch('Logout').then(()=>{
+    location.reload()
+  }).catch(()=>{
+    location.reload()
+  })
+}
 
 </script>
 
